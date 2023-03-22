@@ -29,19 +29,24 @@ public class Main {
         List<Pronostico> pronosticos =  new ArrayList<>();
         cargarArchivoPronosticos(Paths.get(archivoPronosticos), pronosticos);
 
-        List<Partido> partidos = ronda.getPartidos();
-        for (int i = 0; i < partidos.size(); i++) {
-            Partido partido = partidos.get(i);
-            Pronostico pronostico = pronosticos.get(i);
-            pronostico.setPartido(partido);
-            pronosticos.set(i, pronostico);
-        }
+        if (ronda.getPartidos().size() == pronosticos.size()) {
+            List<Partido> partidos = ronda.getPartidos();
 
-        int sumarPuntos = 0;
-        for (Pronostico pronostico : pronosticos) {
-            sumarPuntos += pronostico.puntos();
+            for (int i = 0; i < partidos.size(); i++) {
+                Partido partido = partidos.get(i);
+                Pronostico pronostico = pronosticos.get(i);
+                pronostico.setPartido(partido);
+                pronosticos.set(i, pronostico);
+            }
+
+            int sumarPuntos = 0;
+            for (Pronostico pronostico : pronosticos) {
+                sumarPuntos += pronostico.puntos();
+            }
+            System.out.println("Puntos: " + sumarPuntos);
+        } else {
+            System.out.println("La cantidad de resultados no coincide con las de los pronosticos.");
         }
-        System.out.println("Puntos: " + sumarPuntos);
     }
 
     public static void cargarArchivoPronosticos(Path path, List<Pronostico> pronosticos) {
