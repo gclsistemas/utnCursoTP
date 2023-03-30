@@ -38,7 +38,7 @@ public class Partido {
         this.golesEquipo2 = golesEquipo2;
     }
     public ResultadoEmun resultado(Equipo equipo) {
-        if (equipo.getNombre() == this.equipo1.getNombre()) {
+        if (equipo.getNombre().equals(this.equipo1.getNombre())) {
             if (this.golesEquipo1 > this.golesEquipo2) {
                 //Ganador
                 return new ResultadoEmun(ResultadoEmun.estados.GANADOR);
