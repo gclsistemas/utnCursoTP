@@ -61,6 +61,7 @@ public class Main {
 
         //Uso lista auxiliar de participantes para luego mostrar los resultados por pantalla.
 //        List<Participante> lstParticipantes = new ArrayList<>();
+        int totalPartidos = 0;
         for (Participante participante : participantes) {
             int indicePronostico = 0;
             List<Pronostico> pronosticos = participante.getPronosticos();
@@ -73,6 +74,7 @@ public class Main {
 //                    pronosticos.set(indicePronostico, pronostico);
                     indicePronostico++;
                 }
+                totalPartidos += partidos.size();
             }
 //            participante.setPronosticos(pronosticos);
 //            lstParticipantes.add(participante);
@@ -85,7 +87,8 @@ public class Main {
             for (Pronostico pronostico : pronosticos) {
                 puntos += pronostico.puntos();
             }
-            System.out.println(participante.getNombre() + ": " + puntos + "\n");
+            double pronosticoAcertado = (double)puntos / totalPartidos * 100;
+            System.out.println(participante.getNombre() + ": " + puntos + "\tPronosticos acertados: " + pronosticoAcertado + "%\n");
         }
 
     }
