@@ -21,7 +21,7 @@ public class Equipo {
     public Equipo() {
     }
 
-    public Equipo (String nombre) {
+    public Equipo(String nombre) {
         this.nombre = nombre;
     }
 }

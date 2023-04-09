@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
+    enum indicesArchivoEntrada {RESULTADO, CONFIGURACION}
+
     enum indicesArchivoPronosticos {PARTICIPANTE, EQUIPO_1, GANA_1, EMPATA, GANA_2, EQUIPO_2}
 
-    enum indicesArchivoResultados {RONDA, EQUIPO_1, GOLES_EQUIPO_1, GOLES_EQUIPO_2, EQUIPO_2}
+    enum indicesArchivoResultados {FASE, RONDA, EQUIPO_1, GOLES_EQUIPO_1, GOLES_EQUIPO_2, EQUIPO_2}
 
     private static boolean isNumeric(String cadena){
         try {
@@ -21,102 +23,104 @@ public class Main {
 
     public static void main(String[] args) {
 //        System.out.println("Hello world!");
+
+//        String archConfig = args[indicesArchivoEntrada.CONFIGURACION.ordinal()];
+//        Configuracion configuracion = new Configuracion(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+//        MySQL mySQL = new MySQL();
+        Configuracion configuracion = new Configuracion();
+
         //Formato archivo resultados.csv:
-        // ronda1;equipo1;golesEquipo1;golesEquipo2;equipo2
-        // ronda1;equipo3;golesEquipo3;golesEquipo4;equipo4
-        // ronda2;equipo5;golesEquipo5;golesEquipo6;equipo6
-        String archivoResultados = "resultados.csv";
+        // fase1;ronda1;equipo1;golesEquipo1;golesEquipo2;equipo2
+        // fase1;ronda1;equipo3;golesEquipo3;golesEquipo4;equipo4
+        // fase1;ronda2;equipo5;golesEquipo5;golesEquipo6;equipo6
+        // fase2;ronda1;equipo5;golesEquipo5;golesEquipo6;equipo6
+        // fase2;ronda1;equipo5;golesEquipo5;golesEquipo6;equipo6
+        String archivoResultados = args[indicesArchivoEntrada.RESULTADO.ordinal()]; //"resultados.csv";
         Path path = Paths.get(archivoResultados);
-//        Ronda ronda = new Ronda("Ronda 1");
-//        cargarArchivoResultados(path, ronda);
-        List<Ronda> rondas = cargarArchivoResultados(path);
+        List<Fase> fases = cargarArchivoResultados(path);
+
+        int totalPartidos = 0;
+        for (Fase fase : fases) {
+            for (Ronda ronda : fase.getRondas()) {
+                totalPartidos += ronda.getPartidos().size();
+            }
+        }
 
         //Formato archivo pronosticos.csv:
         // participante1;equipo1;gana1;empata;gana2;equipo2
         // participante1;equipo3;gana3;empata;gana4;equipo4
         // participante2;equipo5;gana5;empata;gana6;equipo6
         String archivoPronosticos = "pronosticos.csv";
-//        List<Pronostico> pronosticos =  new ArrayList<>();
-//        cargarArchivoPronosticos(Paths.get(archivoPronosticos), pronosticos);
         List<Participante> participantes = cargarArchivoPronosticos(Paths.get(archivoPronosticos));
 
-//        if (ronda.getPartidos().size() == pronosticos.size()) {
-//            List<Partido> partidos = ronda.getPartidos();
-//
-//            for (int i = 0; i < partidos.size(); i++) {
-//                Partido partido = partidos.get(i);
-//                Pronostico pronostico = pronosticos.get(i);
-//                pronostico.setPartido(partido);
-//                pronosticos.set(i, pronostico);
-//            }
-//
-//            int sumarPuntos = 0;
-//            for (Pronostico pronostico : pronosticos) {
-//                sumarPuntos += pronostico.puntos();
-//            }
-//            System.out.println("Puntos: " + sumarPuntos);
-//        } else {
-//            System.out.println("La cantidad de resultados no coincide con las de los pronosticos.");
-//        }
-
         //Uso lista auxiliar de participantes para luego mostrar los resultados por pantalla.
-//        List<Participante> lstParticipantes = new ArrayList<>();
-        int totalPartidos = 0;
+        int indicePronostico;
+        List<Pronostico> pronosticos;
+        List<Ronda> rondas;
+        List<Partido> partidos;
         for (Participante participante : participantes) {
-            int indicePronostico = 0;
-            List<Pronostico> pronosticos = participante.getPronosticos();
-            for (Ronda ronda : rondas) {
-                List<Partido> partidos = ronda.getPartidos();
-                for (int i = 0; i < partidos.size(); i++) {
-                    Partido partido = partidos.get(i);
-                    Pronostico pronostico = pronosticos.get(indicePronostico);
-                    pronostico.setPartido(partido);
-//                    pronosticos.set(indicePronostico, pronostico);
-                    indicePronostico++;
+            indicePronostico = 0;
+            pronosticos = participante.getPronosticos();
+            for (Fase fase: fases) {
+                rondas = fase.getRondas();
+                for (Ronda ronda : rondas) {
+                    partidos = ronda.getPartidos();
+                    for (int i = 0; i < partidos.size(); i++) {
+                        Partido partido = partidos.get(i);
+                        Pronostico pronostico = pronosticos.get(indicePronostico);
+                        pronostico.setNroFase(fase.getNro());
+                        pronostico.setNroRonda(ronda.getNro());
+                        pronostico.setPartido(partido);
+                        indicePronostico++;
+                    }
                 }
-                totalPartidos += partidos.size();
             }
-//            participante.setPronosticos(pronosticos);
-//            lstParticipantes.add(participante);
         }
 
         //Muestro por pantalla los resultados
+        System.out.println("\n");
+        int aciertosPronostico = 0;
+        int puntos = 0;
+        int puntosPronostico = 0;
+        int puntosFase = 0;
+        int puntosRonda = 0;
+        double pronosticoAcertado = 0;
         for (Participante participante : participantes) {
-            int puntos = 0;
-            List<Pronostico> pronosticos = participante.getPronosticos();
+            aciertosPronostico = 0;
+            puntosPronostico = 0;
+            pronosticos = participante.getPronosticos();
             for (Pronostico pronostico : pronosticos) {
-                puntos += pronostico.puntos();
+                puntos = pronostico.puntos(configuracion);
+                puntosPronostico += puntos;
+                if (puntos > 0) {
+                    aciertosPronostico++;
+                }
             }
-            double pronosticoAcertado = (double)puntos / totalPartidos * 100;
-            System.out.println(participante.getNombre() + ": " + puntos + "\tPronosticos acertados: " + pronosticoAcertado + "%\n");
+            puntosFase = 0;
+            for (Fase fase : fases) {
+                List<Pronostico> pronosticosRondasFase = new ArrayList<>();
+                rondas = fase.getRondas();
+                puntosRonda = 0;
+                for (Ronda ronda : rondas) {
+                    List<Pronostico> pronosticosRonda = new ArrayList<>();
+                    for (Pronostico pronostico : pronosticos) {
+                        if (pronostico.getNroFase().equals(fase.getNro()) && pronostico.getNroRonda().equals(ronda.getNro())) {
+                            pronosticosRonda.add(pronostico);
+                            pronosticosRondasFase.add(pronostico);
+                        }
+                    }
+                    puntosRonda += ronda.puntos(configuracion.getPtoExtra(), pronosticosRonda);
+                }
+                puntosFase += fase.puntos(configuracion.getPtoExtra(), pronosticosRondasFase);
+            }
+
+            pronosticoAcertado = (double)aciertosPronostico / totalPartidos * 100;
+            System.out.println(participante.getNombre() + "\nPuntos pronosticos: " + puntosPronostico + "\nPronosticos acertados: " + pronosticoAcertado + "%\nPuntos rondas: " +
+                    puntosRonda + "\nPuntos fase: " + puntosFase + "\nTotal puntos: " + (puntosPronostico + puntosRonda + puntosFase) + "\n---------------\n");
         }
 
     }
 
-//    public static void cargarArchivoPronosticos(Path path, List<Pronostico> pronosticos) {
-//        try {
-//            for (String linea : Files.readAllLines(path)) {
-//                String[] datos = linea.split(";"); //Formato: equipo1;gana1;empata;gana2;equipo2 por linea
-//                Partido partido = new Partido(new Equipo(datos[indicesArchivoPronosticos.EQUIPO_1.ordinal()]), 0,
-//                        new Equipo(datos[indicesArchivoPronosticos.EQUIPO_2.ordinal()]), 0);
-//                Equipo equipo = new Equipo();
-//                ResultadoEmun resultadoEmun = new ResultadoEmun(ResultadoEmun.estados.EMPATE);
-//                if (datos[indicesArchivoPronosticos.GANA_1.ordinal()].equals("x") || datos[indicesArchivoPronosticos.GANA_2.ordinal()].equals("x")) {
-//                    resultadoEmun.setEstado(ResultadoEmun.estados.GANADOR);
-//                    if (datos[indicesArchivoPronosticos.GANA_1.ordinal()].equals("x")) {
-//                        equipo.setNombre(datos[0]);
-//                    } else if (datos[indicesArchivoPronosticos.GANA_2.ordinal()].equals("x")) {
-//                        equipo.setNombre(datos[indicesArchivoPronosticos.EQUIPO_2.ordinal()]);
-//                    }
-//                }
-//                Pronostico pronostico = new Pronostico(partido, equipo, resultadoEmun);
-//                pronosticos.add(pronostico);
-//            }
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//            throw new RuntimeException(e);
-//        }
-//    }
     public static List<Participante> cargarArchivoPronosticos(Path path) {
         try {
             boolean inicio = true;
@@ -163,59 +167,58 @@ public class Main {
         }
     }
 
-//    public static void cargarArchivoResultados(Path path, Ronda ronda) {
-//        try {
-//            List<Partido> partidos = new ArrayList<>();
-//            for (String linea : Files.readAllLines(path)) {
-//                String[] datos = linea.split(";"); //Formato: equipo1;golesEquipo1;golesEquipo2;equipo2 por linea
-//                Partido partido = new Partido(new Equipo(datos[indicesArchivoResultados.EQUIPO_1.ordinal()]),
-//                        Integer.parseInt(datos[indicesArchivoResultados.GOLES_EQUIPO_1.ordinal()]),
-//                        new Equipo(datos[indicesArchivoResultados.EQUIPO_2.ordinal()]),
-//                        Integer.parseInt(datos[indicesArchivoResultados.GOLES_EQUIPO_2.ordinal()]));
-//                partidos.add(partido);
-//            }
-//            ronda.setPartidos(partidos);
-//        } catch (IOException e) {
-//            System.out.println(e.getMessage());
-//            throw new RuntimeException(e);
-//        }
-//    }
-    public static List<Ronda> cargarArchivoResultados(Path path) {
-    try {
-        boolean inicio = true;
-        String nroRondaActual = "";
-        Ronda ronda = new Ronda();
-        List<Ronda> rondas = new ArrayList<>();
-        List<Partido> partidos = new ArrayList<>();
-        for (String linea : Files.readAllLines(path)) {
-            String[] datos = linea.split(";"); //Formato: ronda;equipo1;golesEquipo1;golesEquipo2;equipo2 por linea
-            if (datos.length == 5 && isNumeric(datos[indicesArchivoResultados.GOLES_EQUIPO_1.ordinal()]) && isNumeric(datos[indicesArchivoResultados.GOLES_EQUIPO_2.ordinal()])) {
-                if (inicio) {
-                    nroRondaActual = datos[indicesArchivoResultados.RONDA.ordinal()];
-                    ronda.setNro(nroRondaActual);
-                    inicio = false;
-                } else if (!nroRondaActual.equals(datos[indicesArchivoResultados.RONDA.ordinal()])) {
-                    ronda.setPartidos(partidos);
-                    rondas.add(ronda);
-                    nroRondaActual = datos[indicesArchivoResultados.RONDA.ordinal()];
-                    ronda = new Ronda(nroRondaActual);
-                    partidos = new ArrayList<>();
+    public static List<Fase> cargarArchivoResultados(Path path) {
+        try {
+            boolean inicio = true;
+            String nroFaseActual = "";
+            String nroRondaActual = "";
+            Fase Fase = new Fase();
+            Ronda ronda = new Ronda();
+            List<Fase> Fases = new ArrayList<>();
+            List<Ronda> rondas = new ArrayList<>();
+            List<Partido> partidos = new ArrayList<>();
+            for (String linea : Files.readAllLines(path)) {
+                String[] datos = linea.split(";"); //Formato: Fase;ronda;equipo1;golesEquipo1;golesEquipo2;equipo2 por linea
+                if (datos.length == 6 && isNumeric(datos[indicesArchivoResultados.GOLES_EQUIPO_1.ordinal()]) && isNumeric(datos[indicesArchivoResultados.GOLES_EQUIPO_2.ordinal()])) {
+                    if (inicio) {
+                        nroFaseActual = datos[indicesArchivoResultados.FASE.ordinal()];
+                        Fase.setNro(nroFaseActual);
+                        nroRondaActual = datos[indicesArchivoResultados.RONDA.ordinal()];
+                        ronda.setNro(nroRondaActual);
+                        inicio = false;
+                    } else if (!nroFaseActual.equals(datos[indicesArchivoResultados.FASE.ordinal()])) {
+                        Fase.setNro(nroFaseActual);
+                        Fase.setRondas(rondas);
+                        Fases.add(Fase);
+                        nroFaseActual = datos[indicesArchivoResultados.FASE.ordinal()];
+                        nroRondaActual = datos[indicesArchivoResultados.RONDA.ordinal()];
+                        ronda = new Ronda(nroRondaActual);
+                        partidos = new ArrayList<>();
+                    } else if (!nroRondaActual.equals(datos[indicesArchivoResultados.RONDA.ordinal()])) {
+                        ronda.setPartidos(partidos);
+                        rondas.add(ronda);
+                        nroRondaActual = datos[indicesArchivoResultados.RONDA.ordinal()];
+                        ronda = new Ronda(nroRondaActual);
+                        partidos = new ArrayList<>();
+                    }
+                    Partido partido = new Partido(new Equipo(datos[indicesArchivoResultados.EQUIPO_1.ordinal()]),
+                            Integer.parseInt(datos[indicesArchivoResultados.GOLES_EQUIPO_1.ordinal()]),
+                            new Equipo(datos[indicesArchivoResultados.EQUIPO_2.ordinal()]),
+                            Integer.parseInt(datos[indicesArchivoResultados.GOLES_EQUIPO_2.ordinal()]));
+                    partidos.add(partido);
                 }
-                Partido partido = new Partido(new Equipo(datos[indicesArchivoResultados.EQUIPO_1.ordinal()]),
-                        Integer.parseInt(datos[indicesArchivoResultados.GOLES_EQUIPO_1.ordinal()]),
-                        new Equipo(datos[indicesArchivoResultados.EQUIPO_2.ordinal()]),
-                        Integer.parseInt(datos[indicesArchivoResultados.GOLES_EQUIPO_2.ordinal()]));
-                partidos.add(partido);
             }
+            if (partidos.size() > 0) {
+                ronda.setPartidos(partidos);
+                rondas.add(ronda);
+
+                Fase.setRondas(rondas);
+                Fases.add(Fase);
+            }
+            return Fases;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
-        if (partidos.size() > 0) {
-            ronda.setPartidos(partidos);
-            rondas.add(ronda);
-        }
-        return rondas;
-    } catch (IOException e) {
-        System.out.println(e.getMessage());
-        throw new RuntimeException(e);
     }
-}
 }

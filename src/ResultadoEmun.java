@@ -7,12 +7,15 @@ public class ResultadoEmun {
     public estados getEstado() {
         return this.estado;
     }
+
     public void setEstado(estados estado) {
         this.estado = estado;
     }
-    public ResultadoEmun () {
+
+    public ResultadoEmun() {
     }
-    public ResultadoEmun (estados estado) {
+
+    public ResultadoEmun(estados estado) {
         this.estado = estado;
     }
 }
