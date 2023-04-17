@@ -48,7 +48,9 @@ public class Pronostico {
     public Pronostico() {
     }
 
-    public Pronostico(Partido partido, Equipo equipo, ResultadoEmun resultadoEmun) {
+    public Pronostico(String nroFase, String nroRonda, Partido partido, Equipo equipo, ResultadoEmun resultadoEmun) {
+        this.nroFase = nroFase;
+        this.nroRonda = nroRonda;
         this.partido = partido;
         this.equipo = equipo;
         this.resultado = resultadoEmun;

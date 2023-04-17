@@ -1,8 +1,64 @@
-1;1;Argentina;1;2;Arabia Saudita
-1;1;Polonia;0;0;México
-1;1;Argentina;2;0;México
-1;1;Arabia Saudita;0;2;Polonia
-1;2;Brasil;2;1;Paraguay
-1;2;Uruguay;0;0;Chile
-1;2;Brasil;2;0;Chile
-1;2;Uruguay;0;2;Paraguay
+Inicial,Grupo A,Qatar,0,2,Ecuador
+Inicial,Grupo A,Senegal,0,2,Países Bajos
+Inicial,Grupo A,Qatar,1,3,Senegal
+Inicial,Grupo A,Países Bajos,1,1,Ecuador
+Inicial,Grupo A,Países Bajos,2,0,Qatar
+Inicial,Grupo A,Ecuador,1,2,Senegal
+Inicial,Grupo B,Inglaterra,6,2,Irán
+Inicial,Grupo B,EE.UU.,1,1,Gales
+Inicial,Grupo B,Irán,2,0,Gales
+Inicial,Grupo B,Inglaterra,0,0,EE.UU.
+Inicial,Grupo B,Gales,0,3,Inglaterra
+Inicial,Grupo B,Irán,0,1,EE.UU.
+Inicial,Grupo C,Argentina,1,2,Arabia Saudita
+Inicial,Grupo C,México,0,0,Polonia
+Inicial,Grupo C,Arabia Saudita,0,2,Polonia
+Inicial,Grupo C,Argentina,2,0,México
+Inicial,Grupo C,Polonia,0,2,Argentina
+Inicial,Grupo C,Arabia Saudita,1,2,México
+Inicial,Grupo D,Francia,0,0,Túnez
+Inicial,Grupo D,Dinamarca,4,1,Australia
+Inicial,Grupo D,Túnez,0,1,Australia
+Inicial,Grupo D,Dinamarca,2,1,Francia
+Inicial,Grupo D,Túnez,1,0,Dinamarca
+Inicial,Grupo D,Australia,1,0,Francia
+Inicial,Grupo E,Alemania,1,2,Japón
+Inicial,Grupo E,España,7,0,Costa Rica
+Inicial,Grupo E,Japón,0,1,Costa Rica
+Inicial,Grupo E,España,1,1,Alemania
+Inicial,Grupo E,Japón,2,1,España
+Inicial,Grupo E,Costa Rica,2,4,Alemania
+Inicial,Grupo F,Marruecos,0,0,Croacia
+Inicial,Grupo F,Bélgica,1,0,Canadá
+Inicial,Grupo F,Bélgica,0,2,Marruecos
+Inicial,Grupo F,Croacia,4,1,Canadá
+Inicial,Grupo F,Croacia,0,0,Bélgica
+Inicial,Grupo F,Canadá,1,2,Marruecos
+Inicial,Grupo G,Suiza,1,0,Camerún
+Inicial,Grupo G,Brasil,2,0,Serbia
+Inicial,Grupo G,Brasil,1,0,Suiza
+Inicial,Grupo G,Camerún,3,3,Serbia
+Inicial,Grupo G,Camerún,1,0,Brasil
+Inicial,Grupo G,Serbia,2,3,Suiza
+Inicial,Grupo H,Uruguay,0,0,Corea del Sur
+Inicial,Grupo H,Portugal,3,2,Ghana
+Inicial,Grupo H,Corea del Sur,2,3,Ghana
+Inicial,Grupo H,Portugal,2,0,Uruguay
+Inicial,Grupo H,Corea del Sur,2,1,Portugal
+Inicial,Grupo H,Ghana,0,2,Uruguay
+Final,Octavos,Países Bajos,3,1,EE.UU.
+Final,Octavos,Argentina,2,1,Australia
+Final,Octavos,Japón,1,1,Croacia
+Final,Octavos,Brasil,4,1,Corea del Sur
+Final,Octavos,Francia,3,1,Polonia
+Final,Octavos,Inglaterra,3,0,Senegal
+Final,Octavos,Marruecos,0,0,España
+Final,Octavos,Portugal,6,1,Suiza
+Final,Cuartos,Argentina,2,2,Países Bajos
+Final,Cuartos,Croacia,1,1,Brasil
+Final,Cuartos,Inglaterra,1,2,Francia
+Final,Cuartos,Marruecos,1,0,Portugal
+Final,Semis,Argentina,3,0,Croacia
+Final,Semis,Francia,2,0,Marruecos
+Final,Final,Argentina,3,3,Francia
+Final,Final,Croacia,2,1,Marruecos

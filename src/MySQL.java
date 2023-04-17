@@ -1,12 +1,12 @@
 import java.sql.*;
 
 public class MySQL {
-    private String driver = "com.mysql.jdbc.Driver";
-    private String databaseURL = "jdbc:mysql://localhost:3306/";
-//    private String driver = "org.mariadb.jdbc.Driver";
-//    private String databaseURL = "jdbc:mariadb://localhost:3306/";
+//    private String driver = "com.mysql.jdbc.Driver";
+//    private String databaseURL = "jdbc:mysql://localhost:3306/";
+    private String driver = "org.mariadb.jdbc.Driver";
+    private String databaseURL = "jdbc:mariadb://localhost:3306/";
 
-    private String databaseName = "test";
+    private String databaseName = "utn_curso_java"; //""test";
     private String user = "root";
     private String password = "";
 
@@ -31,6 +31,21 @@ public class MySQL {
     }
 
     public MySQL() {
+    }
+
+    /**
+     *
+     * @param databaseURL
+     * @param databaseName
+     * @param userName
+     * @param password
+     */
+    public MySQL(String databaseURL, String databaseName, String userName, String password) {
+        this.driver = driver;
+        this.databaseURL = databaseURL;
+        this.databaseName = databaseName;
+        this.user = userName;
+        this.password = password;
     }
 
     /**
