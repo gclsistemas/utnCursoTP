@@ -302,6 +302,8 @@ public class Main {
                 Pronostico pronostico = new Pronostico(rs.getString("FASE"), rs.getString("RONDA"), partido, equipo, resultadoEmun);
                 pronosticos.add(pronostico);
             }
+            participante.setPronosticos(pronosticos);
+            participantes.add(participante);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         } finally {
