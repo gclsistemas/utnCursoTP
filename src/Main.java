@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,7 +12,7 @@ import java.util.List;
 public class Main {
     enum indicesArchivoEntrada {RESULTADO, CONFIGURACION}
 
-    enum indicesArchivoPronosticos {PARTICIPANTE, EQUIPO_1, GANA_1, EMPATA, GANA_2, EQUIPO_2}
+//    enum indicesArchivoPronosticos {PARTICIPANTE, EQUIPO_1, GANA_1, EMPATA, GANA_2, EQUIPO_2}
 
     enum indicesArchivoResultados {FASE, RONDA, EQUIPO_1, GOLES_EQUIPO_1, GOLES_EQUIPO_2, EQUIPO_2}
 
@@ -25,13 +28,42 @@ public class Main {
     public static void main(String[] args) {
 //        System.out.println("Hello world!");
 
-//        String archConfig = args[indicesArchivoEntrada.CONFIGURACION.ordinal()];
+        int ptoGanado = 3;
+        int ptoEmpatado = 1;
+        int ptoPerdido = 0;
+        int ptoExtra = 5;
+        Configuracion configuracion = null;
+        String archConfig = args[indicesArchivoEntrada.CONFIGURACION.ordinal()];
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(archConfig));
+            String linea = br.readLine();
+            if (linea != null) {
+                String[] datos = linea.split(";");
+                if (datos.length == 4) {
+                    ptoGanado = Integer.parseInt(datos[0]);
+                    ptoEmpatado = Integer.parseInt(datos[1]);
+                    ptoPerdido = Integer.parseInt(datos[2]);
+                    ptoExtra = Integer.parseInt(datos[3]);
+                }
+            }
+            br.close();
+        } catch (FileNotFoundException ex) {
+            // Captura de excepción por fichero no encontrado
+            System.out.println("Error: Fichero no encontrado");
+            ex.printStackTrace();
+        } catch(Exception ex) {
+            // Captura de cualquier otra excepción
+            System.out.println("Error de lectura del fichero");
+            ex.printStackTrace();
+        } finally {
+            configuracion = new Configuracion(ptoGanado, ptoEmpatado, ptoPerdido, ptoExtra);
+        }
 //        Configuracion configuracion = new Configuracion(Integer.parseInt(args[0]), Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 //        MySQL mySQL = new MySQL();
 //        MySQL mySQL = new MySQL("com.mysql.jdbc.Driver", "jdbc:mysql://sql10.freemysqlhosting.net:3306/", "sql10612293",
 //                "sql10612293", "ACwUKDKvbY");
         MySQL mySQL = new MySQL("jdbc:mariadb://sql10.freemysqlhosting.net:3306/", "sql10612293", "sql10612293", "ACwUKDKvbY");
-        Configuracion configuracion = new Configuracion();
+//        Configuracion configuracion = new Configuracion();
 
         //Formato archivo resultados.csv:
         // fase1;ronda1;equipo1;golesEquipo1;golesEquipo2;equipo2
