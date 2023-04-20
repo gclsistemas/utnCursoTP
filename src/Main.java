@@ -214,25 +214,27 @@ public class Main {
             boolean inicio = true;
             String nroFaseActual = "";
             String nroRondaActual = "";
-            Fase Fase = new Fase();
+            Fase fase = new Fase();
             Ronda ronda = new Ronda();
-            List<Fase> Fases = new ArrayList<>();
+            List<Fase> fases = new ArrayList<>();
             List<Ronda> rondas = new ArrayList<>();
             List<Partido> partidos = new ArrayList<>();
             for (String linea : Files.readAllLines(path)) {
-                String[] datos = linea.split(","); //Formato: Fase;ronda;equipo1;golesEquipo1;golesEquipo2;equipo2 por linea
+                String[] datos = linea.split(","); //Formato: fase;ronda;equipo1;golesEquipo1;golesEquipo2;equipo2 por linea
                 if (datos.length == 6 && isNumeric(datos[indicesArchivoResultados.GOLES_EQUIPO_1.ordinal()]) && isNumeric(datos[indicesArchivoResultados.GOLES_EQUIPO_2.ordinal()])) {
                     if (inicio) {
                         nroFaseActual = datos[indicesArchivoResultados.FASE.ordinal()];
-                        Fase.setNro(nroFaseActual);
+                        fase.setNro(nroFaseActual);
                         nroRondaActual = datos[indicesArchivoResultados.RONDA.ordinal()];
                         ronda.setNro(nroRondaActual);
                         inicio = false;
                     } else if (!nroFaseActual.equals(datos[indicesArchivoResultados.FASE.ordinal()])) {
-                        Fase.setNro(nroFaseActual);
-                        Fase.setRondas(rondas);
-                        Fases.add(Fase);
+                        rondas.add(ronda);
+                        fase.setRondas(rondas);
+                        fases.add(fase);
                         nroFaseActual = datos[indicesArchivoResultados.FASE.ordinal()];
+                        fase = new Fase(nroFaseActual);
+                        rondas = new ArrayList<>();
                         nroRondaActual = datos[indicesArchivoResultados.RONDA.ordinal()];
                         ronda = new Ronda(nroRondaActual);
                         partidos = new ArrayList<>();
@@ -254,10 +256,10 @@ public class Main {
                 ronda.setPartidos(partidos);
                 rondas.add(ronda);
 
-                Fase.setRondas(rondas);
-                Fases.add(Fase);
+                fase.setRondas(rondas);
+                fases.add(fase);
             }
-            return Fases;
+            return fases;
         } catch (IOException e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(e);

@@ -26,6 +26,11 @@ public class Fase {
         this.rondas = new ArrayList<>();
     }
 
+    public Fase(String nro) {
+        this.nro = nro;
+        this.rondas = new ArrayList<>();
+    }
+
     public Fase(String nro, List<Ronda> rondas) {
         this.nro = nro;
         this.rondas = rondas;
